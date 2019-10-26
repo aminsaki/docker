@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#To stop all running containers
+docker container stop $(docker container ls -aq)
+
+# remove them
+docker container rm $(docker container ls -aq)
+
+
+docker build -t fthi/php-app:latest .
+

@@ -1,0 +1,55 @@
+version: '2'
+services:
+  app:
+    build:
+      context: "${DOCKERFILE_PATH}"
+      dockerfile: Dockerfile
+    image: fthi/php-app
+    environment:
+      WWWUSERID: "${WWWUSERID}"
+    volumes:
+      - "${APP_PATH}:/var/www/html"
+    ports:
+      - "${APP_PORT}:8080"
+    networks:
+      - ftnet
+  redis:
+    image: redis:latest
+    volumes:
+      - redisdata:/data
+    networks:
+      - ftnet
+  db:
+    image: mysql:5.7
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+        MYSQL_DATABASE: "${DB_NAME}"
+        MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+        MYSQL_USER: "${DB_USER}"
+        MYSQL_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - ftnet
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    networks:
+      - ftnet
+    volumes:
+      - phpmyadmindata:/phpmyadmindata
+networks:
+  ftnet:
+    driver: "bridge"
+volumes:
+  mysqldata:
+    driver: "local"
+  redisdata:
+    driver: "local"
+  phpmyadmindata:
+    driver: "local"

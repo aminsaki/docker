@@ -21,14 +21,14 @@
 
 before_script:
   - *ssh_helper
-  - ssh_init "$SSH_PRIVATE_KEY" "185.189.112.147"
+  - ssh_init "$SSH_PRIVATE_KEY" "197.168.0.1"
 
 deploy_staging:
   stage: deploy
   only:
     - master
   script:         
-    - ssh root@185.189.112.147 "cd  /var/www/html/laravel/ &&
+    - ssh root@197.168.0.1 "cd  /var/www/html/laravel/ &&
       git clone git@gitlab.com:aminsaki691/laravel.git &&
        git remote add origin  git@gitlab.com:aminsaki691/laravel.git &&
       git pull origin master"

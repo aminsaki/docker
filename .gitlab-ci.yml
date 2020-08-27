@@ -3,7 +3,8 @@
 ##1-  variable   SSH_PRIVATE_KEY   create  key public  in  setting  ci cd   variable
 ##2-  adding     ssh  key         create  key private  
 ### code 
-
+# ~/.ssh/id_rsa
+#  ~/.ssh/id_rsa.pub
 .ssh_helper: &ssh_helper |
   function ssh_init() {
       SSH_PRIVATE_KEY="$1"

@@ -4,6 +4,7 @@
 ##2-  adding     ssh  key         create  key private  
 ### code 
 # ~/.ssh/id_rsa
+# chmod 600 authorized_keys
 #  ~/.ssh/id_rsa.pub
 # https://medium.com/@farzin.fthi/deploy-your-application-through-gitlab-ci-7bbed1040dca
 .ssh_helper: &ssh_helper |

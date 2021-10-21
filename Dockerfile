@@ -1,45 +1,58 @@
-FROM alpine:3.10
+FROM alpine:edge
 
-MAINTAINER "farzin fthi"
+WORKDIR /var/www/html/
 
-RUN adduser -D -H -g '' -u 9009 myapp
+# Essentials
+RUN echo "UTC" > /etc/timezone
+RUN apk add --no-cache zip unzip curl sqlite nginx supervisor
 
-RUN apk --update add \
-        php7-mysqli\
-        php7-gd \
-        php7-xmlreader \
-        php7-openssl \
-        php7-zlib \
-        php7-phar \
-        php7-dom \
-        php7-ctype \
-        php7-curl \
-        php7-fpm \
-        php7-intl \
-        php7-json \
-        php7-mbstring \
-		php7-mcrypt \
-        php7-mysqlnd \
-        php7-opcache \
-        php7-pdo \
-        php7-pdo_mysql \
-        php7-posix \
-        php7-session \
-        php7-tidy \
-        php7-xml \
-        php7-zip \
-        php7-tokenizer \
-        php7-bcmath \
-        php7-pcntl \
-        php7-fileinfo \
-        nginx \
-        supervisor \
-        shadow \
-        curl \
-        bash \
-    && rm -rf /var/cache/apk/*
+# Installing bash
+RUN apk add bash
+RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer  | php -- --install-dir=/usr/bin --filename=composer
+# Installing PHP
+RUN apk add --no-cache php \
+    php-common \
+    php-fpm \
+    php-pdo \
+    php-opcache \
+    php-zip \
+    php-phar \
+    php-iconv \
+    php-cli \
+    php-curl \
+    php-openssl \
+    php-mbstring \
+    php-tokenizer \
+    php-fileinfo \
+    php-json \
+    php-xml \
+    php-xmlwriter \
+    php-simplexml \
+    php-dom \
+    php-pdo_mysql \
+    php-pdo_sqlite \
+    php-tokenizer \
+    php7-pecl-redis
+    
+    
+# Installing composer
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN rm -rf composer-setup.php
+
+
+
+# Configure supervisor
+RUN mkdir -p /etc/supervisor.d/
+COPY ./config/supervisord.ini /etc/supervisor.d/supervisord.ini
+
+# Configure php-fpm
+RUN mkdir -p /run/php/
+RUN touch /run/php/php7.4-fpm.pid
+RUN touch /run/php/php7.4-fpm.sock
+
+
 
 RUN mkdir -p /run/nginx && mkdir -p /etc/supervisor.d
 RUN mkdir -p /var/www/html
@@ -55,5 +68,3 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-

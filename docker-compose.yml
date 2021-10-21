@@ -1,26 +1,21 @@
-version: '2'
+version: '3.1'
 services:
   app:
     build:
       context: "${DOCKERFILE_PATH}"
       dockerfile: Dockerfile
-    image: fthi/php-app
+    image: laravel/php-app
     environment:
-      WWWUSERID: "${WWWUSERID}"
+      WWWUSERID: "${WWWUSERID}" 
     volumes:
       - "${APP_PATH}:/var/www/html"
     ports:
       - "${APP_PORT}:8080"
     networks:
-      - ftnet
-  redis:
-    image: redis:latest
-    volumes:
-      - redisdata:/data
-    networks:
-      - ftnet
+      - laravel
   db:
-    image: mysql:5.7
+    image: mariadb
+    restart: always
     volumes:
       - mysqldata:/var/lib/mysql
     environment:
@@ -29,9 +24,9 @@ services:
         MYSQL_USER: "${DB_USER}"
         MYSQL_PASSWORD: "${DB_PASSWORD}"
     networks:
-      - ftnet
+      - laravel
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
     restart: always
     environment:
       PMA_HOST: db
@@ -40,11 +35,11 @@ services:
     ports:
       - "${PHPMYADMIN_PORT}:80"
     networks:
-      - ftnet
+      - laravel
     volumes:
       - phpmyadmindata:/phpmyadmindata
 networks:
-  ftnet:
+  laravel:
     driver: "bridge"
 volumes:
   mysqldata:

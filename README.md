@@ -1,6 +1,7 @@
 # docker-php
-A docker config for php applications (alpine-nginx-php7-mysql-redis-phpmyadmin) 
-
+A docker config for php applications (alpine-nginx-php7.4-mariadb) 
+note: This is the setting for Laravel Eight
+ 
 # sesstion one  
 sudo docker compose up --build 
 # sesstion two  
